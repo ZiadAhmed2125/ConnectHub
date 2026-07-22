@@ -1,5 +1,5 @@
 # ConnectHub
-#### Video Demo:  <URL HERE>
+#### Video Demo:  https://youtu.be/ALi1FHPLoJg?si=pyZAAPVSm1ePdy1p
 #### Description:
 ConnectHub is a social networking web application inspired by Facebook. 
 The application allows users to create accounts, interact with other users, publish posts, and engage with content through likes, comments, reposts, and follows.

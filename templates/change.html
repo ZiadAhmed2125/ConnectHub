@@ -5,43 +5,43 @@
 {% endblock %}
 
 {% block main %}
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-12 col-sm-10 col-md-8 col-lg-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-sm-10 col-md-8 col-lg-5">
 
-            <form action="/change" method="post">
-                <div class="mb-3">
-                    <input
-                        autocomplete="off"
-                        autofocus
-                        class="form-control"
-                        name="oldpassword"
-                        placeholder="Old Password"
-                        type="password">
-                </div>
+                <form action="/change" method="post">
+                    <div class="mb-3">
+                        <input
+                            autocomplete="off"
+                            autofocus
+                            class="form-control"
+                            name="oldpassword"
+                            placeholder="Old Password"
+                            type="password">
+                    </div>
 
-                <div class="mb-3">
-                    <input
-                        class="form-control"
-                        name="newpassword"
-                        placeholder="New Password"
-                        type="password">
-                </div>
+                    <div class="mb-3">
+                        <input
+                            class="form-control"
+                            name="newpassword"
+                            placeholder="New Password"
+                            type="password">
+                    </div>
 
-                <div class="mb-3">
-                    <input
-                        class="form-control"
-                        name="confirmation"
-                        placeholder="Confirmation"
-                        type="password">
-                </div>
+                    <div class="mb-3">
+                        <input
+                            class="form-control"
+                            name="confirmation"
+                            placeholder="Confirmation"
+                            type="password">
+                    </div>
 
-                <button class="btn btn-primary w-100" type="submit">
-                    Change Password
-                </button>
-            </form>
+                    <button class="btn btn-primary w-100" type="submit">
+                        Change Password
+                    </button>
+                </form>
 
+            </div>
         </div>
     </div>
-</div>
 {% endblock %}

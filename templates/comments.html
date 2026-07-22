@@ -11,72 +11,72 @@
     {% if comments %}
         {% for comment in comments %}
 
-        <div class="card mx-auto shadow-sm mb-4 w-100 comment-box">
-            <div class="card-body">
+            <div class="card mx-auto shadow-sm mb-4 w-100 comment-box">
+                <div class="card-body">
                 <!-- Header -->
-                <div class="d-flex align-items-start mb-3">
+                    <div class="d-flex align-items-start mb-3">
 
-                    {% if comment.profile_picture %}
-                        <a href="/profile/{{ comment.user_id }}">
-                            <img
-                                src="{{ url_for('static', filename='profile_pictures/' ~ comment.profile_picture) }}"
-                                class="rounded-circle me-3 comment-avatar">
-                        </a>
-                    {% else %}
-                        <i
-                            class="bi bi-person-circle fs-2 me-3 comment-avatar"
-                            style="color:#4F46E5;">
-                        </i>
-                    {% endif %}
-
-                    <div class="flex-grow-1">
-                        <strong>
-                            <a
-                                href="/profile/{{ comment.user_id }}"
-                                class="text-decoration-none text-break" >
-                                {{ comment.username }}
+                        {% if comment.profile_picture %}
+                            <a href="/profile/{{ comment.user_id }}">
+                                <img
+                                    src="{{ url_for('static', filename='profile_pictures/' ~ comment.profile_picture) }}"
+                                    class="rounded-circle me-3 comment-avatar">
                             </a>
-                        </strong>
+                        {% else %}
+                            <i
+                                class="bi bi-person-circle fs-2 me-3 comment-avatar"
+                                style="color:#4F46E5;">
+                            </i>
+                        {% endif %}
 
-                        <div class="text-secondary small">
+                        <div class="flex-grow-1">
+                            <strong>
+                                <a
+                                    href="/profile/{{ comment.user_id }}"
+                                    class="text-decoration-none text-break" >
+                                    {{ comment.username }}
+                                </a>
+                            </strong>
+
+                            <div class="text-secondary small">
                                 Commented on {{ comment.created_at }}
+                            </div>
                         </div>
-                    </div>
 
-                    {% if session["user_id"] == comment.user_id %}
-                    <div class="ms-auto d-flex align-items-start">
+                        {% if session["user_id"] == comment.user_id %}
+                            <div class="ms-auto d-flex align-items-start">
 
                         <!-- Delete -->
-                        <form action="/delete_comment" method="post">
-                            <input
-                                type="hidden"
-                                name="comment_id"
-                                value="{{ comment.id }}">
+                                <form action="/delete_comment" method="post">
+                                    <input
+                                        type="hidden"
+                                        name="comment_id"
+                                        value="{{ comment.id }}">
 
-                            <input
-                                type="hidden"
-                                name="post_id"
-                                value="{{ post_id }}">
+                                    <input
+                                        type="hidden"
+                                        name="post_id"
+                                        value="{{ post_id }}">
 
-                            <button
-                                class="btn btn-sm btn-outline-danger"
-                                type="submit">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </form>
+                                    <button
+                                        class="btn btn-sm btn-outline-danger"
+                                        type="submit">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+
+                            </div>
+                        {% endif %}
 
                     </div>
-                    {% endif %}
-
-                </div>
 
                 <!-- Text -->
-                <p class="mb-0 text-break">
-                    {{ comment.content }}
-                </p>
+                    <p class="mb-0 text-break">
+                        {{ comment.content }}
+                    </p>
 
+                </div>
             </div>
-        </div>
 
         {% endfor %}
 

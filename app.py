@@ -57,7 +57,7 @@ def index():
                 FROM Comments
                 WHERE Comments.post_id = Posts.id
             ) AS comments_count,
-                       
+
             (
                 SELECT COUNT(*)
                 FROM Likes
@@ -70,10 +70,10 @@ def index():
                 FROM Reposts
                 WHERE Reposts.post_id = Posts.id
             ) AS reposts_count,
-                       
+
             NULL AS reposted_by,
             NULL AS repost_text,
-                       
+
             Posts.created_at AS feed_time
 
         FROM Posts
@@ -86,12 +86,12 @@ def index():
                 FROM Follows
                 WHERE follower_id = ?
         )
-                       
+
         UNION ALL
 
         SELECT
             Posts.*,
-            1 AS is_repost,             
+            1 AS is_repost,
             Users.username,
             Users.profile_picture,
 
@@ -106,7 +106,7 @@ def index():
                 FROM Comments
                 WHERE Comments.post_id = Reposts.post_id
             ) AS comments_count,
-                       
+
             (
                 SELECT COUNT(*)
                 FROM Likes
@@ -119,39 +119,39 @@ def index():
                 FROM Reposts
                 WHERE Reposts.post_id = Posts.id
             ) AS reposts_count,
-                       
+
             (
                 SELECT username
                 FROM Users
                 WHERE Users.id = Reposts.user_id
             ) AS reposted_by,
-                       
+
             Reposts.text AS repost_text,
             Reposts.created_at AS feed_time
-                       
+
         FROM Reposts
         JOIN Posts
         ON Reposts.post_id = Posts.id
         JOIN Users
         ON Posts.user_id = Users.id
-                       
+
         WHERE Reposts.user_id = ?
         OR Reposts.user_id IN (
                 SELECT following_id
                 FROM Follows
                 WHERE follower_id = ?
         )
-                       
+
         ORDER BY feed_time DESC
     """, session["user_id"], session["user_id"], session["user_id"],
-      session["user_id"], session["user_id"], session["user_id"])
+        session["user_id"], session["user_id"], session["user_id"])
 
     return render_template("index.html", posts=posts)
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    """Log user in""" 
+    """Log user in"""
     # User reached route via GET (as by clicking a link or via redirect)
     if request.method == "GET":
         return render_template("login.html")
@@ -210,7 +210,7 @@ def register():
         confirmation = request.form.get("confirmation")
 
         # Validate the input fields
-        if not username: 
+        if not username:
             return error("Must enter username", "danger", "/register")
         if not password:
             return error("Must enter password", "danger", "/register")
@@ -218,16 +218,17 @@ def register():
             return error("Must enter confirmation", "danger", "/register")
         if not password == confirmation:
             return error("password and confirmation are not matching", "danger", "/register")
-        
+
         # Generate a password hash for secure storage
         password_hash = generate_password_hash(password)
 
         # Attempt to insert the new user into the database, if the username already exists, return an error
         try:
-            db.execute("INSERT INTO Users (username, password_hash) VALUES (?, ?);", username, password_hash)
+            db.execute("INSERT INTO Users (username, password_hash) VALUES (?, ?);",
+                       username, password_hash)
         except ValueError:
             return error("Username already exist", "danger", "/register")
-        
+
         flash("You are now part of ConnectHub!", "success")
 
         return render_template("login.html")
@@ -269,7 +270,8 @@ def change():
         password_hash = generate_password_hash(newpassword)
 
         # Updating the user's password
-        db.execute("UPDATE Users SET password_hash = ? WHERE id = ?", password_hash, session["user_id"])
+        db.execute("UPDATE Users SET password_hash = ? WHERE id = ?",
+                   password_hash, session["user_id"])
         flash("Password changed!", "success")
 
         return redirect("/")
@@ -285,14 +287,14 @@ def search():
     # Ensure the user entered a username to search for
     if not query:
         return error("Invalid operation or must type in a username", "danger", "/")
-    
+
     # Remove any leading or trailing whitespace
     query = query.strip()
-    
+
     # Ensure the search query is not only whitespace
     if not query:
         return error("Must type in a username", "danger", "/")
-    
+
     # Enforce the maximum username length
     if len(query) > 20:
         return error("Limit exceeded", "danger", "/")
@@ -324,7 +326,7 @@ def profile(user_id):
     posts = db.execute("""
             SELECT Posts.*,
                 0 as is_repost,
-                        
+
                 (
                     SELECT COUNT(*)
                     FROM Likes
@@ -342,25 +344,25 @@ def profile(user_id):
                     FROM Reposts
                     WHERE Reposts.post_id = Posts.id
                 ) AS reposts_count,
-                       
+
                 (
                     SELECT COUNT(*)
                     FROM Likes
                     WHERE Likes.post_id = Posts.id
                     AND Likes.user_id = ?
                 ) AS is_liked,
-                        
+
                 NULL AS reposted_by,
                 NULL AS repost_text,
-                        
+
                 Posts.created_at AS feed_time
-            
-            FROM Posts WHERE user_id = ? 
-                       
+
+            FROM Posts WHERE user_id = ?
+
         UNION ALL
-                       
+
             SELECT Posts.*,
-                1 AS is_repost,             
+                1 AS is_repost,
 
                 (
                     SELECT COUNT(*)
@@ -379,28 +381,28 @@ def profile(user_id):
                     FROM Reposts
                     WHERE Reposts.post_id = Posts.id
                 ) AS reposts_count,
-                        
+
                 (
                     SELECT COUNT(*)
                     FROM Likes
                     WHERE Likes.post_id = Posts.id
                     AND Likes.user_id = ?
-                ) AS is_liked,            
-                
+                ) AS is_liked,
+
                 (
                     SELECT username
                     FROM Users
                     WHERE Users.id = Reposts.user_id
                 ) AS reposted_by,
-                        
+
                 Reposts.text AS repost_text,
                 Reposts.created_at AS feed_time
-                        
+
             FROM Reposts
             JOIN Posts
                 ON Reposts.post_id = Posts.id
             WHERE Reposts.user_id = ?
-                       
+
         ORDER BY feed_time DESC""", user_id, user_id, user_id, user_id)
 
     # Count the total number of posts and reposts made by the user
@@ -417,10 +419,12 @@ def profile(user_id):
     )
 
     # Count the user's followers
-    followers = db.execute("SELECT COUNT(*) as followers FROM Follows WHERE following_id = ?", user_id)[0]["followers"]
+    followers = db.execute(
+        "SELECT COUNT(*) as followers FROM Follows WHERE following_id = ?", user_id)[0]["followers"]
 
     # Count the users this user is following
-    following = db.execute("SELECT COUNT(*) as following FROM Follows WHERE follower_id = ?", user_id)[0]["following"]
+    following = db.execute(
+        "SELECT COUNT(*) as following FROM Follows WHERE follower_id = ?", user_id)[0]["following"]
 
     # Check whether the logged-in user follows this profile
     is_followed = bool(
@@ -433,10 +437,10 @@ def profile(user_id):
 
     # Display the user's profile page
     return render_template("profile.html", user=user, posts=posts,
-                                posts_count=posts_count,
-                                followers=followers,
-                                following=following,
-                                is_followed=is_followed)
+                           posts_count=posts_count,
+                           followers=followers,
+                           following=following,
+                           is_followed=is_followed)
 
 
 @app.route("/following")
@@ -467,16 +471,15 @@ def follow():
         # Ensure a user ID was provided
         if not following_id:
             return error("Invalid operation", "danger", "/")
-        
+
         # Ensure the provided user ID is a valid integer
         if not is_int(following_id):
             return error("Invalid operation", "danger", "/")
-            
 
         # Prevent users from following themselves
         if follower_id == following_id:
             return error("You can not follow yourself", "danger", f"/profile/{session["user_id"]}")
-        
+
         # Ensure the target user exists
         user = retrieve(following_id, "Users")
         if not user:
@@ -484,11 +487,12 @@ def follow():
 
         # Create the follow relationship
         try:
-            db.execute("INSERT INTO Follows (follower_id, following_id) VALUES (?, ?)", follower_id, following_id)
+            db.execute("INSERT INTO Follows (follower_id, following_id) VALUES (?, ?)",
+                       follower_id, following_id)
         except ValueError:
             # The user is already following the target user
             return error("You are already following this user", "danger", f"/profile/{following_id}")
-        
+
         # Notify the user that the follow was successful
         flash("You are now following this user!", "success")
 
@@ -511,20 +515,20 @@ def unfollow():
         # Ensure a user ID was provided
         if not following_id:
             return error("Invalid operation", "danger", "/")
-        
+
         # Ensure the provided user ID is a valid integer
         if not is_int(following_id):
             return error("Invalid operation", "danger", "/")
-        
+
         # Prevent users from unfollowing themselves
         if follower_id == following_id:
             return error("Invalid operation", "danger", "/")
-        
+
         # Ensure the target user exists
         user = retrieve(following_id, "Users")
         if not user:
             return error("User does not exist", "danger", "/")
-        
+
         # Ensure the current user is actually following the target user
         follow = db.execute(
             "SELECT * FROM Follows WHERE follower_id = ? AND following_id = ?",
@@ -536,14 +540,15 @@ def unfollow():
             return error("You are not following this user", "danger", "/")
 
         # Remove the follow relationship
-        db.execute("DELETE FROM Follows WHERE follower_id = ? AND following_id = ?", follower_id, following_id)
-        
+        db.execute("DELETE FROM Follows WHERE follower_id = ? AND following_id = ?",
+                   follower_id, following_id)
+
         # Notify the user that the unfollow was successful
         flash("You are not following this user anymore!", "success")
 
         # Return to the unfollowed user's profile
         return redirect(f"/profile/{following_id}")
-    
+
     # Redirect GET requests to the following page
     return redirect("/following")
 
@@ -557,9 +562,9 @@ def edit():
 
     # User submitted changes to their profile
     if request.method == "POST":
-        # Get the updated username 
+        # Get the updated username
         new_username = request.form.get("username")
-        
+
         # Check that new username is not empty
         if not new_username:
             flash("Invalid operation or must enter a new username", "danger")
@@ -569,7 +574,8 @@ def edit():
             if len(new_username) <= 20:
                 try:
                     # Update the username in the database
-                    db.execute("UPDATE Users SET username = ? WHERE id = ?", new_username, session["user_id"])
+                    db.execute("UPDATE Users SET username = ? WHERE id = ?",
+                               new_username, session["user_id"])
                     # Update the username stored in the current session
                     session["user_name"] = new_username
                 except ValueError:
@@ -602,16 +608,17 @@ def edit():
                 new_picture.stream.seek(0)
             except Exception:
                 return error("Invalid image", "danger", "/")
-            
+
             # Delete the previous profile picture if it exists
             old_img = f"static/profile_pictures/{user[0]['profile_picture']}"
             if os.path.exists(old_img):
                 os.remove(old_img)
-            
+
             # Save the new profile picture and update the database
             filename = secure_filename(new_picture.filename)
             new_picture.save(f"static/profile_pictures/{filename}")
-            db.execute("UPDATE Users SET profile_picture = ? WHERE id = ?", filename, session["user_id"])
+            db.execute("UPDATE Users SET profile_picture = ? WHERE id = ?",
+                       filename, session["user_id"])
 
         # Get the updated bio
         new_bio = request.form.get("new_bio")
@@ -628,7 +635,8 @@ def edit():
             try:
                 if new_birthday:
                     datetime.strptime(new_birthday, "%Y-%m-%d")
-                    db.execute("UPDATE Users SET birthday = ? WHERE id = ?", new_birthday, session["user_id"])
+                    db.execute("UPDATE Users SET birthday = ? WHERE id = ?",
+                               new_birthday, session["user_id"])
                 else:
                     db.execute("UPDATE Users SET birthday = NULL WHERE id = ?", session["user_id"])
             except ValueError:
@@ -640,22 +648,25 @@ def edit():
 
         # Update the relationship status only if it is valid and has changed
         if new_status != user[0]["relationship"] and new_status in valid_status:
-            db.execute("UPDATE Users SET relationship = ? WHERE id = ?", new_status, session["user_id"])
-            
+            db.execute("UPDATE Users SET relationship = ? WHERE id = ?",
+                       new_status, session["user_id"])
+
         # Get the updated location
         new_location = request.form.get("location")
 
         # Update the location if it has changed
         if new_location != user[0]["location"]:
-            db.execute("UPDATE Users SET location = ? WHERE id = ?", new_location, session["user_id"])
-        
+            db.execute("UPDATE Users SET location = ? WHERE id = ?",
+                       new_location, session["user_id"])
+
         # Get the updated education
         new_education = request.form.get("education")
 
         # Update the education if it has changed
         if new_education != user[0]["education"]:
-            db.execute("UPDATE Users SET education = ? WHERE id = ?", new_education, session["user_id"])
-    
+            db.execute("UPDATE Users SET education = ? WHERE id = ?",
+                       new_education, session["user_id"])
+
         # Get the updated job
         new_job = request.form.get("job")
 
@@ -680,16 +691,16 @@ def create():
     if request.method == "POST":
         # Get the post content and optional uploaded image
         content = request.form.get("content")
-        photo = request.files.get("post_image")        
+        photo = request.files.get("post_image")
 
         # Ensure the content field was submitted
         if not content:
             return error("Invalid operation or posts must contain text", "danger", "/")
-        
+
         # Reject posts containing only whitespace
         if not content.strip():
             return error("Posts must contain text", "danger", "/")
-        
+
         # Enforce the maximum allowed post length
         if len(content) > 5000:
             return error("Limit exceeded", "danger", "/")
@@ -705,21 +716,21 @@ def create():
                 photo.stream.seek(0)
             except Exception:
                 return error("Invalid image", "danger", "/")
-            
+
             # Save the uploaded image and create the post
             filename = secure_filename(photo.filename)
             photo.save(f"static/posts_pictures/{filename}")
             db.execute("INSERT INTO Posts (user_id, content, image, created_at) VALUES (?, ?, ?, ?);",
-                        session["user_id"], content, filename, datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+                       session["user_id"], content, filename, datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         else:
             # Create a text-only post
             db.execute("INSERT INTO Posts (user_id, content, created_at) VALUES (?, ?, ?);",
-                        session["user_id"], content, datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+                       session["user_id"], content, datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
         # Notify the user that the post was created successfully
         flash("Posted successfully!", "success")
         return redirect("/")
-    
+
     # Redirect GET requests to the home page
     return redirect("/")
 
@@ -736,17 +747,17 @@ def delete():
         post = retrieve(post_id, "Posts")
         if not post:
             return error("Post does not exist", "danger", "/")
-        
+
         # Ensure the current user owns the post
         if not post["user_id"] == session["user_id"]:
             return error("Not authorized", "danger", "/")
-        
+
         # Delete the post's image from storage if it exists
         if post["image"]:
             img = f"static/posts_pictures/{post['image']}"
             if os.path.exists(img):
                 os.remove(img)
-        
+
         # Delete all data associated with the post
         db.execute("DELETE FROM Likes WHERE post_id = ?", post_id)
         db.execute("DELETE FROM Comments WHERE post_id = ?", post_id)
@@ -756,7 +767,7 @@ def delete():
         # Notify the user that the post was deleted successfully
         flash("Post deleted successfully!", "success")
         return redirect(f"/")
-    
+
     # Redirect GET requests to the home page
     return redirect(f"/")
 
@@ -788,13 +799,13 @@ def suggestions():
             OR LOWER(COALESCE(birthday, '')) = LOWER(COALESCE(?, ''))
         )
     """,
-    session["user_id"],
-    session["user_id"],
-    current_user["location"],
-    current_user["education"],
-    current_user["job"],
-    current_user["relationship"],
-    current_user["birthday"])
+                       session["user_id"],
+                       session["user_id"],
+                       current_user["location"],
+                       current_user["education"],
+                       current_user["job"],
+                       current_user["relationship"],
+                       current_user["birthday"])
 
     return render_template("suggestions.html", users=users)
 
@@ -806,7 +817,7 @@ def comments(post_id):
     post = retrieve(post_id, "Posts")
     if not post:
         return error("Post does not exist", "danger", "/")
-    
+
     # User commented
     if request.method == "POST":
         # Get the comment content from the submitted form
@@ -815,18 +826,18 @@ def comments(post_id):
         # Ensure the comment field was submitted and is not empty
         if not comment:
             return error("Invalid operation or comments can not be empty!", "danger", f"/comments/{post_id}")
-        
+
         # Reject comments that contain only whitespace
         if not comment.strip():
             return error("Comments can not be empty!", "danger", f"/comments/{post_id}")
-        
+
         # Prevent comments that exceed the maximum allowed length
         if len(comment) > 1000:
             return error("Limit exceeded", "danger", f"/comments/{post_id}")
-        
+
         # Save the new comment to the database
         db.execute("INSERT INTO Comments (post_id, user_id, content, created_at) VALUES (?, ?, ?, ?)",
-                    post_id, session["user_id"], comment, datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+                   post_id, session["user_id"], comment, datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
         # Notify the user that the comment was added successfully
         flash("Comment Added!", "success")
@@ -839,7 +850,7 @@ def comments(post_id):
                            Comments.user_id = Users.id
                            WHERE post_id = ?
                            ORDER BY Comments.created_at ASC""", post_id)
-    
+
     # Display the comments page
     return render_template("comments.html", comments=comments, post_id=post_id)
 
@@ -864,7 +875,7 @@ def delete_comment():
         comment = retrieve(comment_id, "Comments")
         if not comment:
             return error("Comment does not exist", "danger", "/")
-        
+
         # Ensure the comment belongs to the specified post
         if comment["post_id"] != post["id"]:
             return error("Invalid operation", "danger", "/")
@@ -879,7 +890,7 @@ def delete_comment():
         # Notify the user that the comment was deleted successfully
         flash("Comment deleted successfully!", "success")
         return redirect(f"/comments/{post_id}")
-    
+
     # Redirect back to the comments page for non-POST requests
     return redirect(f"/comments/{post_id}")
 
@@ -894,7 +905,7 @@ def edit_post():
         post = retrieve(request.form.get("post_id"), "Posts")
         if not post:
             return error("Post does not exist", "danger", "/")
-        
+
         # Get the updated post content
         new_content = request.form.get("content")
 
@@ -936,7 +947,7 @@ def edit_post():
                 new_photo.stream.seek(0)
             except Exception:
                 return error("Invalid image", "danger", "/")
-            
+
             # Delete the old image if it exists
             old_img = f"static/posts_pictures/{post['image']}"
             if os.path.exists(old_img):
@@ -950,7 +961,8 @@ def edit_post():
 
         # Record the edit time if any changes were made
         if edited:
-            db.execute("UPDATE Posts SET edited_at = ? WHERE id = ?", datetime.now().strftime("%Y-%m-%d %H:%M:%S"), post["id"])
+            db.execute("UPDATE Posts SET edited_at = ? WHERE id = ?",
+                       datetime.now().strftime("%Y-%m-%d %H:%M:%S"), post["id"])
             flash("Post edited successfully!", "success")
 
         return redirect(f"/profile/{session["user_id"]}")
@@ -966,12 +978,12 @@ def edit_post():
     try:
         post = db.execute("SELECT * FROM Posts WHERE id = ?", request.args.get("post_id"))[0]
     except IndexError:
-            return error("Post does not exist", "danger", "/")
+        return error("Post does not exist", "danger", "/")
 
     # Ensure the current user owns the post
     if post["user_id"] != session["user_id"]:
         return error("Unauthorized.", "danger", "/")
-    
+
     # Display the edit post page
     return render_template("edit_post.html", post=post)
 
@@ -987,7 +999,7 @@ def like():
     # Ensure the request contains JSON data
     if not request.is_json:
         return error("Invalid operation", "danger", "/")
-    
+
     # Get the post ID from the request body
     post_id = request.json.get("post_id")
 
@@ -1000,11 +1012,11 @@ def like():
         post_id = int(post_id)
     except (ValueError, TypeError):
         return error("Invalid operation", "danger", "/")
-    
+
     # Ensure the post exists
     if not db.execute("SELECT id FROM Posts WHERE id = ?", post_id):
         return error("Post does not exist", "danger", "/")
-    
+
     try:
         # Like the post
         db.execute(
@@ -1045,19 +1057,19 @@ def repost():
         post = retrieve(post_id, "Posts")
         if not post:
             return error("Post does not exist", "danger", "/")
-        
+
         try:
             # Create a repost with the optional accompanying text
             db.execute("INSERT INTO Reposts (post_id, user_id, text, created_at) VALUES (?, ?, ?, ?)",
-                            post_id, session['user_id'], request.form.get('text'), datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+                       post_id, session['user_id'], request.form.get('text'), datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         except ValueError:
             # Prevent users from reposting the same post more than once
             return error("You have already shared this post", "danger", "/")
-            
+
         # Notify the user that the repost was successful
         flash("Post shared successfully!", "success")
         return redirect("/")
-    
+
     # Display the repost page if a valid post ID is provided
     if request.args.get('post_id'):
         return render_template("repost.html", post_id=request.args.get('post_id'))

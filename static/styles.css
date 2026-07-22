@@ -3,13 +3,15 @@
 ========================== */
 
 body {
-    padding-top: 80px;      /* Navbar height */
+    padding-top: 80px;
+    /* Navbar height */
     background-color: #18191A;
     color: #E4E6EB;
 }
 
 .page-content {
-    padding-bottom: 100px;   /* Footer height */
+    padding-bottom: 100px;
+    /* Footer height */
 }
 
 .page-footer {
@@ -21,7 +23,7 @@ body {
     padding-top: 80px;
 }
 
-/* 
+/*
    AI Assisted with responsive layout improvements.
 */
 
@@ -47,7 +49,7 @@ text-area {
 }
 
 .user-list {
-     max-width: 500px;
+    max-width: 500px;
 }
 
 /* ==========================
@@ -102,7 +104,8 @@ text-area {
    Forms
 ========================== */
 
-.form-control, .form-select {
+.form-control,
+.form-select {
     background-color: #3A3B3C;
     color: #E4E6EB;
     border: 1px solid #555;
@@ -154,16 +157,16 @@ text-area {
     color: #E4E6EB;
 }
 
-.profile-picture-preview{
-    width:150px;
-    height:150px;
-    object-fit:cover;
+.profile-picture-preview {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
 }
 
-@media (max-width:576px){
-    .profile-picture-preview{
-        width:120px;
-        height:120px;
+@media (max-width:576px) {
+    .profile-picture-preview {
+        width: 120px;
+        height: 120px;
     }
 }
 
@@ -172,7 +175,7 @@ text-area {
 ========================== */
 
 .post-box {
-    max-width:800px;
+    max-width: 800px;
     background-color: rgb(100, 85, 85);
 }
 
@@ -193,16 +196,16 @@ text-area {
     object-fit: cover;
 }
 
-.post-avatar{
-    width:55px;
-    height:55px;
-    object-fit:cover;
+.post-avatar {
+    width: 55px;
+    height: 55px;
+    object-fit: cover;
 }
 
-@media (max-width:576px){
-    .post-avatar{
-        width:45px;
-        height:45px;
+@media (max-width:576px) {
+    .post-avatar {
+        width: 45px;
+        height: 45px;
     }
 }
 
@@ -210,16 +213,16 @@ text-area {
    Comments
 ========================== */
 
-.comment-avatar{
-    width:55px;
-    height:55px;
-    object-fit:cover;
+.comment-avatar {
+    width: 55px;
+    height: 55px;
+    object-fit: cover;
 }
 
-@media (max-width:576px){
-    .comment-avatar{
-        width:45px;
-        height:45px;
+@media (max-width:576px) {
+    .comment-avatar {
+        width: 45px;
+        height: 45px;
     }
 }
 
