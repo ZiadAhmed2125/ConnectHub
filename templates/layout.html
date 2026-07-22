@@ -31,22 +31,24 @@
                 </a>
 
                 <!-- Desktop only -->
-                <form
-                    class="d-none d-md-flex my-2 my-md-0 ms-md-3"
-                    action="/search"
-                    method="get">
-
-                    <input
-                        class="form-control"
-                        type="search"
-                        name="q"
-                        placeholder="Search Users">
-
-                    <button class="btn btn-outline-primary ms-2">
-                        <i class="bi bi-search"></i>
-                    </button>
-
-                </form>
+                {% if session["user_id"] %}
+                    <form
+                        class="d-none d-md-flex my-2 my-md-0 ms-md-3"
+                        action="/search"
+                        method="get">
+    
+                        <input
+                            class="form-control"
+                            type="search"
+                            name="q"
+                            placeholder="Search Users">
+    
+                        <button class="btn btn-outline-primary ms-2">
+                            <i class="bi bi-search"></i>
+                        </button>
+    
+                    </form>
+                {% endif %}
         
 
                 <div class="ms-auto">
