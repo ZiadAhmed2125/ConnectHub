@@ -1,0 +1,234 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Index
+{% endblock %}
+
+{% block main %}
+    <div class="card mx-auto shadow-sm mb-4 post-box w-100" style="max-width: 800px;">
+        <div class="card-body post-box">
+            <form action="/create_post" method="post" enctype="multipart/form-data">
+
+                <textarea
+                    class="form-control mb-3"
+                    style="resize: vertical;"
+                    name="content"
+                    rows="3"
+                    maxlength="1000"
+                    placeholder="What's on your mind?"></textarea>
+
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                    <label for="post_image" class="form-label" style="color: aliceblue;">
+                        Upload a photo
+                    </label>
+                    
+                    <input
+                        class="form-control flex-grow-1"
+                        type="file"
+                        name="post_image"
+                        accept="image/*">
+
+                    <button
+                        class="btn btn-primary"
+                        type="submit">
+                        Post
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Posts -->
+    <div class="mx-auto w-100" style="max-width:800px;">
+
+        <h4 class="text-start mb-3">
+            Posts
+        </h4>
+
+        {% if posts %}
+
+            {% for post in posts %}
+
+            <div class="card mx-auto shadow-sm mb-4 w-100" style="max-width:800px;">
+
+                <!-- Repost Banner -->
+                {% if post.reposted_by %}
+                    <div class="card-header bg-transparent border-0 text-secondary small">
+                        <i class="bi bi-repeat"></i>
+                        Reposted by {{ post.reposted_by }}
+                        • On {{ post.feed_time }}
+                    </div>
+
+                    {% if post.repost_text %}
+                        <div class="px-3 pb-2">
+                            <p class="mb-2">{{ post.repost_text }}</p>
+                        </div>
+                    {% endif %}
+                {% endif %}
+
+                <div class="card-body">
+
+                    <!-- Header -->
+                    <div class="d-flex align-items-start mb-3">
+
+                        {% if post.profile_picture %}
+                            <a href="/profile/{{ post.user_id }}">
+                                <img
+                                    src="{{ url_for('static', filename='profile_pictures/' ~ post.profile_picture) }}"
+                                    class="rounded-circle me-3 post-avatar"
+                                    alt="profile_picture">
+                            </a>
+                        {% else %}
+                            <a href="/profile/{{ post.user_id }}">
+                                <i
+                                    class="bi bi-person-circle fs-2 me-3 post-avatar"
+                                    style="color:#4F46E5;">
+                                </i>
+                            </a>
+                        {% endif %}
+
+                        <div class="flex-grow-1">
+
+                            <strong>
+                                <a
+                                    href="/profile/{{ post.user_id }}"
+                                    class="text-decoration-none text-break">
+                                    {{ post.username }}
+                                </a>
+                            </strong>
+
+                            <div class="text-secondary small">
+
+                                Posted on {{ post.created_at }}
+
+                                {% if post.edited_at %}
+                                    • Edited on {{ post.edited_at }}
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                        {% if session["user_id"] == post.user_id and not post.reposted_by %}
+                        <div class="ms-auto d-flex gap-2">
+
+                            <!-- Edit -->
+                            <form action="/edit_post" method="get">
+                                <input
+                                    type="hidden"
+                                    name="post_id"
+                                    value="{{ post.id }}">
+
+                                <button
+                                    class="btn btn-sm btn-outline-secondary"
+                                    type="submit">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+                            </form>
+
+                            <!-- Delete -->
+                            <form action="/delete_post" method="post">
+                                <input
+                                    type="hidden"
+                                    name="post_id"
+                                    value="{{ post.id }}">
+
+                                <button
+                                    class="btn btn-sm btn-outline-danger"
+                                    type="submit">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+
+                        </div>
+                        {% endif %}
+
+                    </div>
+
+                    <!-- Text -->
+                    <p class="mb-3 text-break">
+                        {{ post.content }}
+                    </p>
+
+                    <!-- Image -->
+                    {% if post.image %}
+                        <a href="{{ url_for('static', filename='posts_pictures/' ~ post.image) }}">
+                            <img
+                                src="{{ url_for('static', filename='posts_pictures/' ~ post.image) }}"
+                                class="img-fluid rounded mb-3 post-image">
+                        </a>
+                    {% endif %}
+
+                </div>
+
+                <!-- Footer -->
+                <div class="card-footer p-0">
+
+                    <div class="row g-0 text-center">
+
+                        <div  class="col">
+                            <button
+                                class="btn btn-light w-100 rounded-0 like-btn"
+                                data-post-id="{{ post.id }}">
+
+                                {% if post.is_liked %}
+                                    <i class="bi bi-heart-fill text-danger heart-{{ post.id }}"></i>
+                                {% else %}
+                                    <i class="bi bi-heart heart-{{ post.id }}"></i>
+                                {% endif %}
+                                
+                                <span class="likes-{{ post.id }}">{{ post.likes_count }}</span>
+                            </button>
+                        </div>
+
+                        <div class="col">
+                            <div class="col">
+                                <a
+                                    href="/comments/{{ post.id }}"
+                                    class="btn btn-light w-100 rounded-0">
+                                    <i class="bi bi-chat"></i>
+                                    {{ post.comments_count }}
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <form action="/repost" method="get">
+                                <input
+                                    type="hidden"
+                                    name="post_id"
+                                    value="{{ post.id }}">
+
+                                <button
+                                    class="btn btn-light w-100 rounded-0"
+                                    type="submit">
+                                    <i class="bi bi-repeat"></i>
+                                    {{ post.reposts_count }}
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="alert alert-secondary text-center mx-auto w-100"
+                style="max-width:800px;">
+                No posts yet. Create your first post or
+                <a href="/suggestions" class="alert-link">
+                    see suggestions.
+                </a>
+            </div>
+
+        {% endif %}
+
+    </div>
+{% endblock %}

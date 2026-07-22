@@ -1,0 +1,12 @@
+Throughout the development of this project, I used several AI models (like ChatGPT, gemeni, and claude)
+All design decisions, implementation, testing, and final code integration were completed by me, 
+while AI was used to assist in the following areas:
+
+- Assisted with database design and schema planning.
+- Helped construct and optimize complex SQL queries.
+- Help apply consistent styling throughout the project.
+- Assisted in making the interface responsive across different screen sizes and devices.
+- Helped identify and debug difficult or unexpected issues.
+- Reviewed Flask routes to identify potential bugs, edge cases,
+  and security vulnerabilities, and suggested ways to mitigate them.
+- Reviewed code and provided suggestions for readability, maintainability, and best practices.

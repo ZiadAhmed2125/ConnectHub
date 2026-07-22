@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- http://getbootstrap.com/docs/5.3/ -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+        
+        <!-- icon (Missing) --> 
+        <link href="/static/people-fill.svg" rel="icon">
+
+        <link href="/static/styles.css" rel="stylesheet">
+
+        <title>Mini Facebook: {% block title %}{% endblock %}</title>
+
+    </head>
+
+    <body class="d-flex flex-column min-vh-100">
+
+        <nav class="navbar navbar-expand-md border-bottom fixed-top">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold" href="/" style="color: #4F46E5;">
+                    <i class="bi bi-people-fill me-2"></i>
+                    ConnectHub
+                </a>
+
+                <!-- Desktop only -->
+                <form
+                    class="d-none d-md-flex my-2 my-md-0 ms-md-3"
+                    action="/search"
+                    method="get">
+
+                    <input
+                        class="form-control"
+                        type="search"
+                        name="q"
+                        placeholder="Search Users">
+
+                    <button class="btn btn-outline-primary ms-2">
+                        <i class="bi bi-search"></i>
+                    </button>
+
+                </form>
+        
+
+                <div class="ms-auto">
+                    {% if session["user_id"] %}
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link fs-4" href="#" id="menuDropdown"
+                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    ☰
+                                </a>
+
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="menuDropdown">
+                                    <li>
+                                         {% if session["user_name"] %}
+                                            <span class="dropdown-item-text text-secondary">
+                                                Signed in as "{{ session["user_name"] }}"
+                                            </span>
+                                        {% endif %}
+                                    </li>
+
+                                    <li><hr class="dropdown-divider"></li>
+
+                                    <li><a class="dropdown-item" href="/profile/{{ session['user_id'] }}">Profile</a></li>
+                                    <li><a class="dropdown-item" href="/following">Following</a></li>
+                                    <li><a class="dropdown-item" href="/change">Change Password</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/logout">Log Out</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    {% else %}
+                        <ul class="navbar-nav ms-auto mt-2 mb-2">
+                            <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/login">Log In</a></li>
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+
+        <!-- mobile only -->
+        {% if session["user_id"] %}
+            <div class="container-fluid d-md-none border-bottom bg-body py-2 fixed-top mobile-search-bar">
+                <form class="d-flex" action="/search" method="get">
+                    <input
+                        class="form-control me-2"
+                        type="search"
+                        name="q"
+                        placeholder="Search Users"
+                        aria-label="Search">
+                    <button class="btn btn-outline-primary" type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </form>
+            </div>
+        {% endif %}
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div
+                        class="alert alert-{{ category }} mt-3 mx-auto flash-msg"
+                        style="max-width: 600px;"
+                        role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <main class="container py-5 text-center flex-grow-1 page-content">
+            {% block main %}{% endblock %}
+        </main>
+
+        <footer class="border-top text-center text-secondary py-2 fixed-bottom page-footer">
+            <small>
+                ConnectHub • CS50x Final Project
+            </small>
+        </footer>
+
+        <script src="/static/scripts.js"></script>
+    </body>
+
+</html>

@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Repost
+{% endblock %}
+
+{% block main %}
+    <h4 class="mb-3">Share this post</h4>
+    
+    <div class="card mx-auto shadow-sm w-100" style="max-width:800px;">
+        <div class="card-body post-box">
+
+            <form action="/repost" method="post">
+
+                <input
+                    type="hidden"
+                    name="post_id"
+                    value="{{ post_id }}">
+
+                <textarea
+                    class="form-control mb-3"
+                    name="text"
+                    rows="3"
+                    maxlength="500"
+                    placeholder="Say Something..."></textarea>
+
+                <div class="text-end">
+                    <button
+                        class="btn btn-primary"
+                        type="submit">
+                        Share
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+{% endblock %}

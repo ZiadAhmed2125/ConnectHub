@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Suggestions
+{% endblock %}
+
+{% block main %}
+
+    <h2 class="mb-4">Suggested people</h2>
+
+    {% if users %}
+        <div class="list-group mx-auto w-100 user-list">
+            {% for user in users %}
+                <a
+                    href="/profile/{{ user.id }}"
+                    class="list-group-item list-group-item-action text-center">
+                    <i class="bi bi-person-circle me-2" style="color: #4F46E5;"></i>
+                    <strong class="text-break">
+                        {{ user.username }}
+                    </strong>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-secondary mx-auto w-100" style="max-width: 500px;">
+            Complete your profile to discover people with similar interests and backgrounds.
+            <a href="/profile/{{ session['user_id'] }}" class="alert-link">
+                Edit your profile
+            </a>
+        </div>
+    {% endif %}
+
+{% endblock %}

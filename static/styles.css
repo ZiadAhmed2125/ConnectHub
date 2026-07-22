@@ -1,0 +1,228 @@
+/* ==========================
+   General
+========================== */
+
+body {
+    padding-top: 80px;      /* Navbar height */
+    background-color: #18191A;
+    color: #E4E6EB;
+}
+
+.page-content {
+    padding-bottom: 100px;   /* Footer height */
+}
+
+.page-footer {
+    background: #242526;
+    z-index: 1030;
+}
+
+.page-content {
+    padding-top: 80px;
+}
+
+/* 
+   AI Assisted with responsive layout improvements.
+*/
+
+@media (max-width: 767.98px) {
+    .page-content {
+        padding-top: 140px;
+    }
+
+    .mobile-search-bar {
+        top: 56px;
+        z-index: 1500;
+    }
+
+    .mobile-nav {
+        background-color: var(--bs-body-bg);
+        padding: 1rem;
+        border-top: 1px solid var(--bs-border-color);
+    }
+}
+
+text-area {
+    resize: vertical;
+}
+
+.user-list {
+     max-width: 500px;
+}
+
+/* ==========================
+   Navbar
+========================== */
+
+.navbar {
+    background-color: #242526;
+    border-color: #3A3B3C !important;
+}
+
+.navbar-brand {
+    color: #4F46E5 !important;
+    font-weight: bold;
+}
+
+.navbar-brand:hover {
+    color: #6D63FF !important;
+}
+
+.nav-link {
+    color: #E4E6EB !important;
+}
+
+.nav-link:hover {
+    color: white !important;
+}
+
+/* ==========================
+   Dropdown
+========================== */
+
+.dropdown-menu {
+    background-color: #242526;
+    border: 1px solid #3A3B3C;
+}
+
+.dropdown-item {
+    color: #E4E6EB;
+}
+
+.dropdown-item:hover {
+    background-color: #3A3B3C;
+    color: white;
+}
+
+.dropdown-divider {
+    border-color: #3A3B3C;
+}
+
+/* ==========================
+   Forms
+========================== */
+
+.form-control, .form-select {
+    background-color: #3A3B3C;
+    color: #E4E6EB;
+    border: 1px solid #555;
+}
+
+.form-control:focus {
+    background-color: #3A3B3C;
+    color: #E4E6EB;
+    border-color: #4F46E5;
+    box-shadow: none;
+}
+
+.form-control::placeholder {
+    color: #B0B3B8;
+}
+
+/* ==========================
+   Buttons
+========================== */
+
+.btn-primary {
+    background-color: #4F46E5;
+    border-color: #4F46E5;
+}
+
+.btn-primary:hover {
+    background-color: #635BFF;
+    border-color: #635BFF;
+}
+
+/* ==========================
+   Profile
+========================== */
+
+.card.mx-auto.mb-4,
+.card.mx-auto.shadow-sm.mb-4,
+.card.mx-auto.shadow-sm.mt-3 {
+    max-width: 800px;
+    background-color: aliceblue;
+}
+
+.personal-details {
+    background-color: rgb(210, 200, 200);
+    color: #E4E6EB;
+}
+
+.personal-details {
+    background-color: #3C3C3E;
+    color: #E4E6EB;
+}
+
+.profile-picture-preview{
+    width:150px;
+    height:150px;
+    object-fit:cover;
+}
+
+@media (max-width:576px){
+    .profile-picture-preview{
+        width:120px;
+        height:120px;
+    }
+}
+
+/* ==========================
+   Posts
+========================== */
+
+.post-box {
+    max-width:800px;
+    background-color: rgb(100, 85, 85);
+}
+
+.btn-light {
+    background-color: #3C3C3E;
+    color: #E4E6EB;
+    border: none;
+}
+
+.btn-light:hover {
+    background-color: #4E4F50;
+    color: #E4E6EB;
+}
+
+.post-image {
+    max-height: 500px;
+    width: 100%;
+    object-fit: cover;
+}
+
+.post-avatar{
+    width:55px;
+    height:55px;
+    object-fit:cover;
+}
+
+@media (max-width:576px){
+    .post-avatar{
+        width:45px;
+        height:45px;
+    }
+}
+
+/* ==========================
+   Comments
+========================== */
+
+.comment-avatar{
+    width:55px;
+    height:55px;
+    object-fit:cover;
+}
+
+@media (max-width:576px){
+    .comment-avatar{
+        width:45px;
+        height:45px;
+    }
+}
+
+.comment-box {
+    max-width: 800px;
+}
