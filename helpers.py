@@ -18,6 +18,16 @@ def login_required(f):
         if session.get("user_id") is None:
             return redirect("/login")
 
+        # Check if the user still exists
+        user = db.execute(
+            "SELECT id FROM Users WHERE id = ?",
+            session.get("user_id")
+        )
+
+        if not user:
+            session.clear()
+            return redirect("/login")
+
         # Continue to the requested route
         return f(*args, **kwargs)
 
