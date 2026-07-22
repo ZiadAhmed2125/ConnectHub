@@ -102,7 +102,7 @@ The main tables are:
 
 1. Clone the repository.
 
-[repo]
+https://github.com/ZiadAhmed2125/ConnectHub.git
 
 2. Install the required packages:
 
