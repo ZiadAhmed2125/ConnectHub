@@ -228,7 +228,7 @@ def register():
         except ValueError:
             return error("Username already exist", "danger", "/register")
         
-        flash("You are now part of Mini Facebook!", "success")
+        flash("You are now part of ConnectHub!", "success")
 
         return render_template("login.html")
     return render_template("register.html")
